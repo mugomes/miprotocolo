@@ -1,0 +1,157 @@
+' Gambas class file
+
+' Copyright (C) 2004-2024 Murilo Gomes Julio
+' SPDX-License-Identifier: GPL-2.0-only
+
+' Mestre da Info
+' Site: https://www.mestredainfo.com.br
+
+Public sIDs As String = ""
+Private $conecta As Connection
+
+Private Function getIDCliente(id As Integer) As String
+  
+  Dim txt As String = ""
+  Dim $conecta1 As Connection
+  
+  Try $conecta1.Close()
+  $conecta1 = New Connection
+  $conecta1.Type = "sqlite3"
+  $conecta1.Host = FMain.dbPath 
+  $conecta1.Name = FMain.dbName
+  $conecta1.Open()
+  
+  Dim rs As Result = $conecta1.Exec("SELECT id,nome FROM mi_clientes WHERE id=&1", id)
+  
+  While (rs.Available)
+    txt = rs!nome
+    rs.MoveNext()
+  Wend
+  $conecta1.Close()
+  
+  Return txt   
+  
+End
+
+Private Function getNomeEmpresa() As String 
+  
+  Dim txt As String = ""
+  Dim $conecta1 As Connection
+  
+  Try $conecta1.Close()
+  $conecta1 = New Connection
+  $conecta1.Type = "sqlite3"
+  $conecta1.Host = FMain.dbPath 
+  $conecta1.Name = FMain.dbName
+  $conecta1.Open()
+  
+  Dim rs As Result = $conecta1.Exec("SELECT id,nome FROM mi_options WHERE id=1")
+  
+  While (rs.Available)
+    txt = rs!nome
+    rs.MoveNext()
+  Wend
+  $conecta1.Close()
+  
+  Return txt  
+  
+End
+
+Public Sub Report_Open()
+  
+  Dim a As ReportLabel
+  Dim b As ReportTextLabel
+  Dim c As ReportLine
+  Dim i As Integer = 1
+  Dim sNomeEmpresa As String = getNomeEmpresa()
+  Dim pageBreak As ReportPageBreak
+  
+  Dim s As String[] = []
+  
+  Try $conecta.Close()
+  $conecta = New Connection
+  $conecta.Type = "sqlite3"
+  $conecta.Host = FMain.dbPath 
+  $conecta.Name = FMain.dbName
+  $conecta.Open()
+  
+  Dim rs As Result
+
+  If sIDs = "" Then 
+    rs = $conecta.Exec("SELECT * FROM mi_protocolos")
+  Else 
+    rs = $conecta.Exec("SELECT * FROM mi_protocolos WHERE id IN (" & sIDs & ")")
+  Endif 
+  
+  While (rs.Available)
+    'Empresa
+    a = New ReportLabel(ReportVBox1)
+    a.Text = sNomeEmpresa
+    a.Alignment = Align.Center
+    a.Font.bold = True
+    a.Font.Size = 18
+    
+    'Protocolo
+    a = New ReportLabel(ReportVBox1)
+    a.Text = "Protocolo"
+    a.Alignment = Align.Center
+    a.Font.bold = True
+    a.Font.Size = 14
+    a.Margin.Bottom = "3mm"
+    
+    'Campo Nome
+    a = New ReportLabel(ReportVBox1)
+    a.Text = "Nome"
+    a.Font.bold = True
+    a.Font.Size = 12
+    
+    b = New ReportTextLabel(ReportVBox1)
+    
+    If IsInteger(rs!nome) = True Then 
+      b.Text = getIDCliente(rs!nome)
+    Else 
+      b.Text = rs!nome 
+    Endif 
+    b.Font.Size = 12
+    
+    'Campo Descrição
+    a = New ReportLabel(ReportVBox1)
+    a.Text = "Descrição"
+    a.Font.bold = True
+    a.Font.Size = 12
+    a.Margin.Top = "7px"
+    s = Split(rs!descricao, "\n")
+    
+    For Each row As String In s
+      b = New ReportTextLabel(ReportVBox1)
+      b.Text = row
+      b.Font.Size = 12
+    Next 
+    
+    ' Data e Assinatura
+    a = New ReportLabel(ReportVBox1)
+    a.Text = "Data: _____/_____/_______                             Assinatura: _________________________________"
+    a.Font.bold = True
+    a.Font.Size = 12
+    a.Margin.Top = "9mm"
+    a.Margin.Left = "7mm"
+    a.Margin.Bottom = "9mm"
+    
+    'Separador
+    c = New ReportLine(ReportVBox1)
+    c.Height = 1 & "px"
+    c.Margin.Top = 7 & "mm"
+    c.Margin.Bottom = 7 & "mm"
+    
+    If i = 3 Then 
+      'Nova Página
+      pageBreak = New ReportPageBreak(ReportVBox1)
+      i = 1
+    Endif
+    Inc i
+    
+    rs.MoveNext()
+  Wend
+  $conecta.Close()
+  
+End

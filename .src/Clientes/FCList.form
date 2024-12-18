@@ -1,0 +1,36 @@
+# Gambas Form File 3.0
+
+{ Form Form
+  MoveScaled(0,0,85,71)
+  Font = Font["12"]
+  Text = ("Clientes")
+  Icon = Picture["miprotocolo.png"]
+  Resizable = False
+  { cv ColumnView
+    MoveScaled(1,8,83,53)
+    #Translate = False
+    Mode = Select.Multiple
+    Sorted = True
+    Resizable = True
+    AutoResize = False
+    ShowCheck = True
+  }
+  { btnExcluir Button
+    MoveScaled(39,2,18,5)
+    Background = &HE03737
+    Foreground = &HFFFFFF
+    Text = ("Excluir")
+  }
+  { btnAdd Button
+    MoveScaled(1,2,18,5)
+    Background = &H008000
+    Foreground = &HFFFFFF
+    Text = ("Adicionar")
+  }
+  { btnEditar Button
+    MoveScaled(20,2,18,5)
+    Background = &H1F8FFF
+    Foreground = &HFFFFFF
+    Text = ("Editar")
+  }
+}

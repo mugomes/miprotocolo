@@ -1,0 +1,211 @@
+' Gambas class file
+
+' Copyright (C) 2004-2024 Murilo Gomes Julio
+' SPDX-License-Identifier: GPL-2.0-only
+
+' Mestre da Info
+' Site: https://www.mestredainfo.com.br
+
+Public dbPath As String = User.Home & "/.config/miprotocolo/dados/"
+Public dbName As String = "miprotocolo.sqlite"
+
+Private $conecta As Connection
+
+Private Sub createDB()
+  
+  If Exist(dbPath & dbName) = False Then 
+    Shell "mkdir -p \"" & dbPath & "\"" Wait 
+    
+    $conecta = New Connection
+    $conecta.Type = "sqlite3"
+    $conecta.Host = dbPath
+    $conecta.Name = ""
+    $conecta.Open
+    $conecta.Databases.Add(dbName)
+    $conecta.Close()
+  Endif 
+  
+  Try $conecta.Close()
+  $conecta = New Connection
+  $conecta.Type = "sqlite3"
+  $conecta.Host = dbPath 
+  $conecta.Name = dbName
+  $conecta.Open()
+  
+  Dim sql As String = "CREATE TABLE IF NOT EXISTS mi_clientes (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL);"
+  
+  sql &= "CREATE TABLE IF NOT EXISTS mi_protocolos (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL, descricao TEXT NOT NULL);"
+  
+  sql &= "CREATE TABLE IF NOT EXISTS mi_options (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL);"
+  
+  $conecta.Exec(sql)
+  
+  $conecta.Close()  
+  
+End
+
+Private Function getIDCliente(id As Integer) As String
+  
+  Dim txt As String = ""
+  Dim $conecta1 As Connection
+  
+  Try $conecta1.Close()
+  $conecta1 = New Connection
+  $conecta1.Type = "sqlite3"
+  $conecta1.Host = dbPath 
+  $conecta1.Name = dbName
+  $conecta1.Open()
+  
+  Dim rs As Result = $conecta1.Exec("SELECT id,nome FROM mi_clientes WHERE id=&1", id)
+  
+  While (rs.Available)
+    txt = rs!nome
+    rs.MoveNext()
+  Wend
+  $conecta1.Close()
+  
+  Return txt   
+  
+End
+
+Public Sub carregarDados()
+  
+  cv.Clear()
+  
+  Try $conecta.Close()
+  $conecta = New Connection
+  $conecta.Type = "sqlite3"
+  $conecta.Host = dbPath 
+  $conecta.Name = dbName
+  $conecta.Open()
+  
+  Dim rs As Result = $conecta.Exec("SELECT * FROM mi_protocolos")
+  
+  While (rs.Available)
+    cv.Add(rs!id, rs!id)
+    If IsInteger(rs!nome) = True Then 
+      cv[rs!id][1] = getIDCliente(rs!nome)
+    Else 
+      cv[rs!id][1] = rs!nome
+    Endif 
+    rs.MoveNext()
+  Wend
+  $conecta.Close()
+  
+End
+
+Public Sub Form_Open()
+  
+  createDB()
+  
+  cv.Columns.Count = 2
+  cv.Columns[0].Text = "ID"
+  cv.Columns[0].Width = 100
+  cv.Columns[1].Text = "Nome"
+  cv.Columns[1].Width = 479
+  cv.Header = True
+  
+  carregarDados()
+  
+End
+
+Public Sub mnuClientes_Click()
+  
+  FCList.ShowDialog()
+  
+End
+
+Public Sub btnEditar_Click()
+  
+  cv_DblClick
+  
+End
+
+Public Sub cv_DblClick()
+  
+  If Not IsNull(cv.Key) Then
+    FPAdd.sID = cv[cv.Key][0]
+    FPAdd.ShowDialog()
+    cv[cv.Key].Selected = False
+  Endif
+  
+End
+
+Public Sub btnExcluir_Click()
+  
+  If cv.Selection.Count > 0 Then 
+    If Message.Question(Subst("Deseja excluir o(s) &1 registro(s) selecionado(s)?", cv.Selection.Count), "Sim", "Não") = 1 Then 
+      Try $conecta.Close()
+      $conecta = New Connection
+      $conecta.Type = "sqlite3"
+      $conecta.Host = dbPath 
+      $conecta.Name = dbName
+      $conecta.Open()
+      
+      For Each row As Integer In cv.Selection
+        $conecta.Exec("DELETE FROM mi_protocolos WHERE id=&1", row)
+      Next 
+      
+      $conecta.Close()
+      
+      cv.Remove(cv.Key)
+      
+      carregarDados()
+    Endif 
+  Endif 
+  
+End
+
+Public Sub btnAdd_Click()
+  
+  FPAdd.ShowDialog()
+  
+End
+
+Public Sub mnuProtocolosRelatorio_Click()
+  
+  Dim Report1 As New ReportP
+  
+  Report1.Preview()
+  
+End
+
+Public Sub mnuConfigEmpresa_Click()
+  
+  FOptions.ShowDialog()
+  
+End
+
+Public Sub mnuApoie_Click()
+  
+  Dim sTerm As String = ""
+  
+  Shell "xdg-open \"https://www.mestredainfo.com.br/p/apoie.html\"" To sTerm
+  
+End
+
+Public Sub mnuSobre_Click()
+  
+  FAbout.ShowDialog()
+  
+End
+
+Public Sub mnuProtocolosSelecionar_Click()
+  
+  FSelecionar.ShowDialog()
+  
+End
+
+Public Sub mnuSuporte_Click()
+  
+  FSuporte.ShowDialog()
+  
+End
+
+Public Sub mnuBugReporting_Click()
+  
+  Dim sTerm As String 
+
+  Shell "xdg-open \"https://www.mestredainfo.com.br/p/bug-reporting.html\"" To sTerm
+  
+End

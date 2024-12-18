@@ -1,0 +1,21 @@
+# Gambas Form File 3.0
+
+{ Form Form
+  MoveScaled(0,0,64,21)
+  Font = Font["12"]
+  Text = ("Adicionar Cliente")
+  Icon = Picture["miprotocolo.png"]
+  Resizable = False
+  { Label1 Label
+    MoveScaled(1,1,61,5)
+    Font = Font["Bold"]
+    Text = ("Nome (Pessoa Física/Jurídica)")
+  }
+  { txtNome TextBox
+    MoveScaled(1,6,62,5)
+  }
+  { btnSalvar Button
+    MoveScaled(21,13,21,6)
+    Text = ("Salvar")
+  }
+}

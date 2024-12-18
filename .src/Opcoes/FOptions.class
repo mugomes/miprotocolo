@@ -1,0 +1,61 @@
+' Gambas class file
+
+' Copyright (C) 2004-2024 Murilo Gomes Julio
+' SPDX-License-Identifier: GPL-2.0-only
+
+' Mestre da Info
+' Site: https://www.mestredainfo.com.br
+
+Public $conecta As Connection
+
+Public Sub Form_Open()
+  
+  Dim retorno As Boolean = False 
+  
+  Try $conecta.Close()
+  $conecta = New Connection
+  $conecta.Type = "sqlite3"
+  $conecta.Host = FMain.dbPath 
+  $conecta.Name = FMain.dbName
+  $conecta.Open()
+  
+  Dim rs As Result = $conecta.Exec("SELECT id,nome FROM mi_options WHERE id=1")
+  While (rs.Available)
+    retorno = True 
+    txtNome.Text = rs!nome
+    rs.MoveNext()
+  Wend
+  $conecta.Close()
+  
+  If retorno = False Then 
+    Try $conecta.Close()
+    $conecta = New Connection
+    $conecta.Type = "sqlite3"
+    $conecta.Host = FMain.dbPath 
+    $conecta.Name = FMain.dbName
+    $conecta.Open()
+    $conecta.Exec("INSERT INTO mi_options (nome) VALUES ('Nome da Empresa')")
+    $conecta.Close()
+  Endif
+  
+End
+
+Public Sub btnSalvar_Click()
+  
+  If txtNome.Text = "" Or Left(txtNome.Text, 1) = " " Then 
+    Message.Info("Preencha o campo \"nome\" antes de salvar!")
+    txtNome.SetFocus()
+    Label1.Foreground = Color.Red
+  Else 
+    $conecta = New Connection
+    Try $conecta.Close()
+    $conecta.Type = "sqlite3"
+    $conecta.Host = FMain.dbPath 
+    $conecta.Name = FMain.dbName
+    $conecta.Open()
+    $conecta.Exec("UPDATE mi_options SET nome=&1 WHERE id=1", Trim(txtNome.Text))
+    $conecta.Close()
+    Me.Close()
+  Endif
+
+End

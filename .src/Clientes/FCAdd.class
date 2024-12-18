@@ -1,0 +1,64 @@
+' Gambas class file
+
+' Copyright (C) 2004-2024 Murilo Gomes Julio
+' SPDX-License-Identifier: GPL-2.0-only
+
+' Mestre da Info
+' Site: https://www.mestredainfo.com.br
+
+Public sID As Integer = 0
+
+Public $conecta As Connection
+
+Public Sub Form_Open()
+  
+  If sID > 0 Then 
+    Try $conecta.Close()
+    $conecta = New Connection
+    $conecta.Type = "sqlite3"
+    $conecta.Host = FMain.dbPath 
+    $conecta.Name = FMain.dbName
+    $conecta.Open()
+    
+    Dim rs As Result = $conecta.Exec("SELECT * FROM mi_clientes WHERE id=&1", sID)
+    While (rs.Available)
+      txtNome.Text = rs!nome
+      rs.MoveNext()
+    Wend
+    $conecta.Close()
+  Endif
+  
+End
+
+Public Sub btnSalvar_Click()
+  
+  If txtNome.Text = "" Or Left(txtNome.Text, 1) = " " Then 
+    Message.Info("Preencha o campo Nome!")
+    Label1.Foreground = Color.Red
+    txtNome.SetFocus()
+  Else 
+    $conecta = New Connection
+    Try $conecta.Close()
+    $conecta.Type = "sqlite3"
+    $conecta.Host = FMain.dbPath 
+    $conecta.Name = FMain.dbName
+    $conecta.Open()
+    
+    If sID = 0 Then 
+      $conecta.Exec("INSERT INTO mi_clientes (nome) VALUES (&1)", Trim(txtNome.Text))
+    Else 
+      $conecta.Exec("UPDATE mi_clientes SET nome=&1 WHERE id=&2", Trim(txtNome.Text), sID)
+    Endif 
+    
+    $conecta.Close()
+    
+    If sID > 0 Then 
+      FMain.carregarDados()
+    Endif
+    
+    FCList.carregarDados()
+    
+    Me.Close()
+  Endif
+  
+End

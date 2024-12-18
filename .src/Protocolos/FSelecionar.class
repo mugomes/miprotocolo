@@ -1,0 +1,89 @@
+' Gambas class file
+
+' Copyright (C) 2004-2024 Murilo Gomes Julio
+' SPDX-License-Identifier: GPL-2.0-only
+
+' Mestre da Info
+' Site: https://www.mestredainfo.com.br
+
+Private $conecta As Connection
+
+Private Function getIDCliente(id As Integer) As String
+  
+  Dim txt As String = ""
+  Dim $conecta1 As Connection
+  
+  Try $conecta1.Close()
+  $conecta1 = New Connection
+  $conecta1.Type = "sqlite3"
+  $conecta1.Host = FMain.dbPath 
+  $conecta1.Name = FMain.dbName
+  $conecta1.Open()
+  
+  Dim rs As Result = $conecta1.Exec("SELECT id,nome FROM mi_clientes WHERE id=&1", id)
+  
+  While (rs.Available)
+    txt = rs!nome
+    rs.MoveNext()
+  Wend
+  $conecta1.Close()
+  
+  Return txt   
+  
+End
+
+Public Sub carregarDados()
+  
+  cv.Clear()
+  
+  Try $conecta.Close()
+  $conecta = New Connection
+  $conecta.Type = "sqlite3"
+  $conecta.Host = FMain.dbPath 
+  $conecta.Name = FMain.dbName
+  $conecta.Open()
+  
+  Dim rs As Result = $conecta.Exec("SELECT * FROM mi_protocolos")
+  
+  While (rs.Available)
+    cv.Add(rs!id, rs!id)
+    If IsInteger(rs!nome) = True Then 
+      cv[rs!id][1] = getIDCliente(rs!nome)
+    Else 
+      cv[rs!id][1] = rs!nome
+    Endif 
+    rs.MoveNext()
+  Wend
+  $conecta.Close()
+  
+End
+
+Public Sub Form_Open()
+  
+  cv.Columns.Count = 2
+  cv.Columns[0].Text = "ID"
+  cv.Columns[0].Width = 100
+  cv.Columns[1].Text = "Nome"
+  cv.Columns[1].Width = 479
+  cv.Header = True
+  
+  carregarDados()
+  
+End
+
+Public Sub btnGerar_Click()
+  
+  Dim ids As String 
+  
+  If Not IsNull(cv.Key) Then
+    Dim Report1 As New ReportP
+    For Each row As String In cv.Selection
+      ids &= row & ","
+    Next
+    
+    Report1.sIDs = Left(ids, Len(ids) - 1)
+    
+    Report1.Preview()
+  Endif
+  
+End

@@ -1,0 +1,30 @@
+# Gambas Form File 3.0
+
+{ Form Form
+  MoveScaled(0,0,64,64)
+  Font = Font["12"]
+  Text = ("Adcionar Protocolo")
+  Icon = Picture["miprotocolo.png"]
+  Resizable = False
+  { Label1 Label
+    MoveScaled(1,1,61,5)
+    Font = Font["Bold"]
+    Text = ("Nome (Pessoa Física/Jurídica)")
+  }
+  { btnSalvar Button
+    MoveScaled(21,56,21,6)
+    Text = ("Salvar")
+  }
+  { Label2 Label
+    MoveScaled(1,12,61,5)
+    Font = Font["Bold"]
+    Text = ("Descrição")
+  }
+  { txtDescricao TextArea
+    MoveScaled(1,17,62,37)
+    Wrap = True
+  }
+  { txtIDCliente ComboBox
+    MoveScaled(1,6,62,6)
+  }
+}

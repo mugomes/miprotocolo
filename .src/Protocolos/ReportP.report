@@ -1,0 +1,12 @@
+# Gambas Form File 3.0
+
+{ Report Report
+  #MoveScaled(0,0,64,67)
+  Padding = ReportPadding["Top:15mm;Bottom:15mm;Left:15mm;Right:15mm"]
+  Index = 0
+  Text = ("Protocolos")
+  { ReportVBox1 ReportVBox
+    #MoveScaled(1,1,62,6)
+  }
+  Index = 0
+}

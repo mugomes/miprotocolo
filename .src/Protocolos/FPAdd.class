@@ -1,0 +1,121 @@
+' Gambas class file
+
+' Copyright (C) 2004-2024 Murilo Gomes Julio
+' SPDX-License-Identifier: GPL-2.0-only
+
+' Mestre da Info
+' Site: https://www.mestredainfo.com.br
+
+Public sID As Integer = 0
+
+Public $conecta As Connection
+
+Private Sub getIDClientes() 
+  
+  Try $conecta.Close()
+  $conecta = New Connection
+  $conecta.Type = "sqlite3"
+  $conecta.Host = FMain.dbPath 
+  $conecta.Name = FMain.dbName
+  $conecta.Open()
+  
+  Dim rs As Result = $conecta.Exec("SELECT * FROM mi_clientes")
+  While (rs.Available)
+    txtIDCliente.Add(Subst("&1 #&2", rs!nome, rs!id))
+    rs.MoveNext()
+  Wend
+  $conecta.Close()
+  
+End
+
+Private Function getIDCliente(id As Integer) As String
+  
+  Dim txt As String = ""
+  Dim $conecta1 As Connection
+  
+  Try $conecta1.Close()
+  $conecta1 = New Connection
+  $conecta1.Type = "sqlite3"
+  $conecta1.Host = FMain.dbPath 
+  $conecta1.Name = FMain.dbName
+  $conecta1.Open()
+  
+  Dim rs As Result = $conecta1.Exec("SELECT id,nome FROM mi_clientes WHERE id=&1", id)
+  
+  While (rs.Available)
+    txt = rs!nome
+    rs.MoveNext()
+  Wend
+  $conecta1.Close()
+  
+  Return txt   
+  
+End
+
+Public Sub Form_Open()
+  
+  If sID > 0 Then 
+    Try $conecta.Close()
+    $conecta = New Connection
+    $conecta.Type = "sqlite3"
+    $conecta.Host = FMain.dbPath 
+    $conecta.Name = FMain.dbName
+    $conecta.Open()
+    
+    Dim rs As Result = $conecta.Exec("SELECT * FROM mi_protocolos WHERE id=&1", sID)
+    While (rs.Available)
+      If IsInteger(rs!nome) = True Then 
+        txtIDCliente.Text = Subst("&1 #&2", getIDCliente(rs!nome), rs!nome)
+      Else 
+        txtIDCliente.Text = rs!nome
+      Endif 
+      txtDescricao.Text = rs!descricao
+      rs.MoveNext()
+    Wend
+    $conecta.Close()
+  Endif
+  
+  getIDClientes()
+  
+End
+
+Public Sub btnSalvar_Click()
+  
+  If txtIDCliente.Text = "" Or Left(txtIDCliente.Text, 1) = " " Then    
+    Message.Info("Preencha o campo Nome!")
+    Label1.Foreground = Color.Red
+    txtIDCliente.SetFocus()
+  Else If txtDescricao.Text = "" Or Left(txtDescricao.Text, 1) = " " Then 
+    Message.Info("Preencha o campo Descrição!")
+    Label2.Foreground = Color.Red
+    txtDescricao.SetFocus()
+  Else 
+    $conecta = New Connection
+    Try $conecta.Close()
+    $conecta.Type = "sqlite3"
+    $conecta.Host = FMain.dbPath 
+    $conecta.Name = FMain.dbName
+    $conecta.Open()
+    
+    If sID = 0 Then 
+      If InStr(txtIDCliente.Text, "#") = 0 Then 
+        $conecta.Exec("INSERT INTO mi_protocolos (nome,descricao) VALUES (&1,&2)", Trim(txtIDCliente.Text), Trim(txtDescricao.Text))
+      Else 
+        $conecta.Exec("INSERT INTO mi_protocolos (nome,descricao) VALUES (&1,&2)", Trim(Split(txtIDCliente.Text, "#")[1]), Trim(txtDescricao.Text))
+      Endif 
+    Else 
+      If InStr(txtIDCliente.Text, "#") = 0 Then
+        $conecta.Exec("UPDATE mi_protocolos SET nome=&1,descricao=&2 WHERE id=&3", Trim(txtIDCliente.Text), Trim(txtDescricao.Text), sID)
+      Else 
+        $conecta.Exec("UPDATE mi_protocolos SET nome=&1,descricao=&2 WHERE id=&3", Trim(Split(txtIDCliente.Text, "#")[1]), Trim(txtDescricao.Text), sID)
+      Endif 
+    Endif 
+    
+    $conecta.Close()
+    
+    FMain.carregarDados()
+    
+    Me.Close()
+  Endif 
+  
+End

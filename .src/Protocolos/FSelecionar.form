@@ -1,0 +1,21 @@
+# Gambas Form File 3.0
+
+{ Form Form
+  MoveScaled(0,0,90,63)
+  Font = Font["12"]
+  Text = ("Selecionar Relatório")
+  Icon = Picture["miprotocolo.png"]
+  Resizable = False
+  { cv ColumnView
+    MoveScaled(1,1,88,52)
+    Mode = Select.Multiple
+    Sorted = True
+    Resizable = True
+    AutoResize = False
+    ShowCheck = True
+  }
+  { btnGerar Button
+    MoveScaled(32,55,27,6)
+    Text = ("Gerar Relatório")
+  }
+}

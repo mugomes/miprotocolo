@@ -1,0 +1,78 @@
+# Gambas Form File 3.0
+
+{ Form Form
+  MoveScaled(0,0,85,75)
+  Font = Font["12"]
+  Text = ("MIProtocolos")
+  Icon = Picture["miprotocolo.png"]
+  Resizable = False
+  { Menu1 Menu
+    Text = ("Clientes")
+    { mnuClientes Menu
+      Text = ("Clientes")
+    }
+  }
+  { Menu2 Menu
+    Text = ("Relatórios")
+    { mnuProtocolosSelecionar Menu
+      Text = ("Selecionar Protocolos")
+    }
+    { mnuProtocolosRelatorio Menu
+      Text = ("Relatório Completo")
+    }
+  }
+  { Menu4 Menu
+    Text = ("Configuração")
+    { mnuConfigEmpresa Menu
+      Text = ("Empresa")
+    }
+  }
+  { Menu5 Menu
+    Text = ("Ajuda")
+    { mnuSuporte Menu
+      Text = ("Suporte")
+    }
+    { Menu7 Menu
+    }
+    { mnuBugReporting Menu
+      Text = ("Relatar um bug")
+    }
+    { Menu3 Menu
+    }
+    { mnuApoie Menu
+      Text = ("Apoie MIProtocolo")
+    }
+    { Menu6 Menu
+    }
+    { mnuSobre Menu
+      Text = ("Sobre MIProtocolo")
+    }
+  }
+  { cv ColumnView
+    MoveScaled(1,8,83,61)
+    #Translate = False
+    Mode = Select.Multiple
+    Sorted = True
+    Resizable = True
+    AutoResize = False
+    ShowCheck = True
+  }
+  { btnExcluir Button
+    MoveScaled(39,2,17,5)
+    Background = &HE03737
+    Foreground = &HFFFFFF
+    Text = ("Excluir")
+  }
+  { btnAdd Button
+    MoveScaled(1,2,18,5)
+    Background = &H008000
+    Foreground = &HFFFFFF
+    Text = ("Adicionar")
+  }
+  { btnEditar Button
+    MoveScaled(20,2,18,5)
+    Background = &H007FFF
+    Foreground = &HFFFFFF
+    Text = ("Editar")
+  }
+}
