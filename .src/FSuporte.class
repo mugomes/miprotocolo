@@ -4,7 +4,7 @@
 ' SPDX-License-Identifier: GPL-2.0-only
 
 ' Mestre da Info
-' Site: https://apps.mestredainfo.com.br
+' Site: https://www.mestredainfo.com.br
 
 Public Sub URLLabel1_Click()
 
