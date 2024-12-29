@@ -214,6 +214,6 @@ Public Sub mnuCheckUpdate_Click()
 
   Dim sTerm As String 
 
-  Shell "xdg-open \"https://www.mestredainfo.com.br/p/miprotocolo.html\"" To sTerm
+  Shell "xdg-open \"https://www.mestredainfo.com.br/2024/12/miprotocolo.html\"" To sTerm
 
 End
