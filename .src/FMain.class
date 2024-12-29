@@ -209,3 +209,11 @@ Public Sub mnuBugReporting_Click()
   Shell "xdg-open \"https://www.mestredainfo.com.br/p/bug-reporting.html\"" To sTerm
   
 End
+
+Public Sub mnuCheckUpdate_Click()
+
+  Dim sTerm As String 
+
+  Shell "xdg-open \"https://www.mestredainfo.com.br/p/miprotocolo.html\"" To sTerm
+
+End
