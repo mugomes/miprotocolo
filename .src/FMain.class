@@ -1,6 +1,6 @@
 ' Gambas class file
 
-' Copyright (C) 2004-2024 Murilo Gomes Julio
+' Copyright (C) 2004-2025 Murilo Gomes Julio
 ' SPDX-License-Identifier: GPL-2.0-only
 
 ' Mestre da Info
@@ -126,7 +126,7 @@ Public Sub cv_DblClick()
   If Not IsNull(cv.Key) Then
     FPAdd.sID = cv[cv.Key][0]
     FPAdd.ShowDialog()
-    cv[cv.Key].Selected = False
+    Try cv[cv.Key].Selected = False
   Endif
   
 End
@@ -178,9 +178,7 @@ End
 
 Public Sub mnuApoie_Click()
   
-  Dim sTerm As String = ""
-  
-  Shell "xdg-open \"https://www.mestredainfo.com.br/p/apoie.html\"" To sTerm
+  Shell "xdg-open \"https://www.mestredainfo.com.br/p/apoie.html\""
   
 End
 
@@ -203,17 +201,13 @@ Public Sub mnuSuporte_Click()
 End
 
 Public Sub mnuBugReporting_Click()
-  
-  Dim sTerm As String 
 
-  Shell "xdg-open \"https://www.mestredainfo.com.br/p/bug-reporting.html\"" To sTerm
+  Shell "xdg-open \"https://www.mestredainfo.com.br/p/bug-reporting.html\""
   
 End
 
 Public Sub mnuCheckUpdate_Click()
 
-  Dim sTerm As String 
-
-  Shell "xdg-open \"https://www.mestredainfo.com.br/2024/12/miprotocolo.html\"" To sTerm
+  Shell "xdg-open \"https://www.mestredainfo.com.br/2024/12/miprotocolo.html\""
 
 End

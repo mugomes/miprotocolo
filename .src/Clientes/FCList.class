@@ -1,6 +1,6 @@
 ' Gambas class file
 
-' Copyright (C) 2004-2024 Murilo Gomes Julio
+' Copyright (C) 2004-2025 Murilo Gomes Julio
 ' SPDX-License-Identifier: GPL-2.0-only
 
 ' Mestre da Info
@@ -48,6 +48,7 @@ Public Sub btnExcluir_Click()
       
       For Each row As Integer In cv.Selection
         $conecta.Exec("DELETE FROM mi_clientes WHERE id=&1", row)
+        $conecta.Exec("DELETE FROM mi_protocolos WHERE nome=&1", row)
       Next 
       
       $conecta.Close()
@@ -55,6 +56,8 @@ Public Sub btnExcluir_Click()
       cv.Remove(cv.Key)
       
       carregarDados()
+      
+      FMain.carregarDados()
     Endif 
   Endif
   
@@ -84,7 +87,7 @@ Public Sub cv_DblClick()
   If Not IsNull(cv.Key) Then
     FCAdd.sID = cv[cv.Key][0]
     FCAdd.ShowDialog()
-    cv[cv.Key].Selected = False
+    Try cv[cv.Key].Selected = False
   Endif 
   
 End
