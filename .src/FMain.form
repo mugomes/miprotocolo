@@ -34,23 +34,13 @@
     }
     { Menu9 Menu
     }
-    { mnuSuporte Menu
-      Text = ("Suporte")
-    }
-    { Menu7 Menu
-    }
-    { mnuBugReporting Menu
-      Text = ("Relatar um bug")
-    }
-    { Menu3 Menu
-    }
-    { mnuApoie Menu
-      Text = ("Apoie MIProtocolo")
+    { mnuAssinantes Menu
+      Text = ("Assinantes")
     }
     { Menu6 Menu
     }
     { mnuSobre Menu
-      Text = ("Sobre MIProtocolo")
+      Text = ("Sobre MiProtocolo")
     }
   }
   { cv ColumnView
