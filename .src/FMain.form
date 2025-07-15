@@ -3,7 +3,7 @@
 { Form Form
   MoveScaled(0,0,85,75)
   Font = Font["12"]
-  Text = ("MIProtocolo")
+  Text = ("MiProtocolo")
   Icon = Picture["miprotocolo.png"]
   Resizable = False
   { Menu1 Menu
