@@ -1,6 +1,6 @@
 # MIProtocolo
 
-Crie protocolos para envio e recebimento de documentos.
+Crie protocolos para envio e recebimento de documentos. Gere relatórios para impressão e PDF.
 
 ## InformaÇões
 
