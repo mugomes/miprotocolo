@@ -22,6 +22,19 @@ Public Sub Form_Open()
     Dim rs As Result = $conecta.Exec("SELECT * FROM mi_clientes WHERE id=&1", sID)
     While (rs.Available)
       txtNome.Text = rs!nome
+      txtCPFCNPJ.Text = rs!cpf
+      txtDataDeNascimento.Text = rs!datadenascimento
+      txtTelCel.Text = rs!telefone
+      txtEmail.Text = rs!email
+      txtEndereco.Text = rs!endereco
+      txtNumero.Text = rs!endnum
+      txtBairro.Text = rs!bairro
+      txtComplemento.Text = rs!complemento
+      txtCEP.Text = rs!cep
+      txtCidade.Text = rs!cidade
+      txtEstado.Text = rs!estado
+      txtComentario.Text = rs!comentario
+      
       rs.MoveNext()
     Wend
     $conecta.Close()
@@ -44,9 +57,9 @@ Public Sub btnSalvar_Click()
     $conecta.Open()
     
     If sID = 0 Then 
-      $conecta.Exec("INSERT INTO mi_clientes (nome) VALUES (&1)", Trim(txtNome.Text))
+      $conecta.Exec("INSERT INTO mi_clientes (nome,cpf,datadenascimento,telefone,email,endereco,endnum,bairro,complemento,cep,cidade,estado,comentario) VALUES (&1,&2,&3,&4,&5,&6,&7,&8,&9,&{10},&{11},&{12},&{13})", Trim(txtNome.Text), Trim(txtCPFCNPJ.Text), Trim(txtDataDeNascimento.Text), Trim(txtTelCel.Text), Trim(txtEmail.Text), Trim(txtEndereco.Text), Trim(txtNumero.Text), Trim(txtBairro.Text), Trim(txtComplemento.Text), Trim(txtCEP.Text), Trim(txtCidade.Text), Trim(txtEstado.Text), Trim(txtComentario.Text))
     Else 
-      $conecta.Exec("UPDATE mi_clientes SET nome=&1 WHERE id=&2", Trim(txtNome.Text), sID)
+      $conecta.Exec("UPDATE mi_clientes SET nome=&1,cpf=&2,datadenascimento=&3,telefone=&4,email=&5,endereco=&6,endnum=&7,bairro=&8,complemento=&9,cep=&{10},cidade=&{11},estado=&{12},comentario=&{13} WHERE id=&{14}", Trim(txtNome.Text), Trim(txtCPFCNPJ.Text), Trim(txtDataDeNascimento.Text), Trim(txtTelCel.Text), Trim(txtEmail.text), Trim(txtEndereco.Text), Trim(txtNumero.Text), Trim(txtBairro.Text), Trim(txtComplemento.Text), Trim(txtCEP.Text), Trim(txtCidade.Text), Trim(txtEstado.Text), Trim(txtComentario.Text), sID)
     Endif 
     
     $conecta.Close()
