@@ -4,7 +4,7 @@ Crie protocolos para envio e recebimento de documentos. Gere relatórios para im
 
 ## InformaÇões
 
-- [Página MiProtocolo](https://www.mestredainfo.com.br/2025/07/miprotocolo.html)
+- [Página MiProtocolo](https://www.mugomes.com.br/2025/07/miprotocolo.html)
 
 ## License
 
